@@ -1,0 +1,45 @@
+/* Modal Container Styles */
+.modal-container {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-color: rgba(
+    0,
+    0,
+    0,
+    0.5
+  ); /* Add transparency for overlay effect */
+  z-index: 999;
+  transition: opacity 0.3s ease; /* Add fade effect */
+  /* display: none; */
+}
+
+/* Modal Content Styles */
+.modal-content {
+  background-color: white;
+  padding: 20px;
+  border-radius: 10px;
+  max-width: 400px;
+  width: 100%;
+  transition: transform 0.3s ease; /* Add slide-in effect */
+}
+
+/* Styles for switching views between Sign In and Sign Up */
+.modal-view {
+  overflow: hidden;
+  transition: height 0.3s ease; /* Add height transition */
+}
+
+.show-sign-in {
+  height: 100%; /* Set height to show Sign In view */
+}
+
+.show-sign-up {
+  height: 0; /* Hide Sign Up view */
+  overflow: hidden;
+}
