@@ -1,83 +1,101 @@
-import React, { useState } from "react";
+import React, { useState, useEffect, useContext } from "react";
+/* eslint-disable react/no-unescaped-entities */
+import axios from "axios";
 import useSubmit from "@/hooks/useSubmit";
 import { LoginSchema } from "@/config/schema";
 import NavBar from "@/components/navbar";
 import Footer from "@/components/footer";
-import Button from "@/components/button";
-import { IoEyeSharp } from "react-icons/io5";
-import { FaEdit } from "react-icons/fa";
+import AppButton from "@/components/button";
+import { FaLocationArrow } from "react-icons/fa6";
 import { Flex, Input, InputGroup, Divider, Center } from "@chakra-ui/react";
 import SearchBox from "@/components/search";
 import ReportIssueButton from "@/components/ReportIssueButton";
+import { SelectContext } from "../context/SelectContext";
+import { useNavigate } from "react-router-dom";
+import { apiurl } from "../config/apiurl";
 
 const Home = () => {
   const { errors, register, handleSubmit } = useSubmit(LoginSchema);
   const [selectPosition, setSelectPosition] = useState(null);
+  const { selected, setSelected } = useContext(SelectContext);
+  const navigate = useNavigate();
 
-  const onLogin = (data) => {
-    console.log(data);
+  const [recentIssues, setrecentIssues] = useState();
+  const [recentIssuesRes, setrecentIssuesRes] = useState("");
+
+  const lastissues = recentIssues ? recentIssues[0] : "";
+
+  const getRecent = () => {
+    axios
+      .get(apiurl + "/getRecentIssues")
+      .then(function (response) {
+        setrecentIssues(response.data.RecentIssuesdocuments);
+        setrecentIssuesRes("");
+      })
+      .catch(function (error) {
+        setrecentIssuesRes(error.response.data.message);
+        console.log(error.response.data.message);
+      });
   };
+
+  const [currentLocation, setCurrentLocation] = useState({
+    lat: null,
+    lng: null,
+  });
+
+  useEffect(() => {}, []);
+  const gimmeUrLocation = () => {
+    navigator.geolocation.getCurrentPosition((position) => {
+      setSelected({
+        lat: position.coords.latitude,
+        lon: position.coords.longitude,
+      });
+      navigate(`/all-reports`);
+    });
+  };
+
+  const center = {
+    lat: currentLocation.lat,
+    lng: currentLocation.lng,
+  };
+
+  useEffect(() => {
+    getRecent();
+  }, []);
   return (
     <React.Fragment>
       <NavBar />
       <section className="bg-white ">
         <div className="flex flex-col md:flex-row gap-4 p-8 px-4 md:px-8 justify-center items-center w-auto h-auto">
           <div className="flex flex-col gap-8 md:p-4">
-            <p className="text-2xl  md:text-8xl font-semibold ">
-              Bring your local issues to
+            <p className="text-2xl font-semibold  md:text-6xl lg:text-8xl md:font-bold ">
+              Bring your local issues to{" "}
               <span className="text-tetiary">Light!</span>
             </p>
           </div>
           <div className="flex flex-col gap-8 p-4 md:p-4">
             {" "}
-            <h2 className="text-primary  flex flex-wrap md:text-2xl font-bold text-[1.1rem]">
+            <h2 className="text-primary  flex flex-wrap md:text-2xl font-semibold text-[1.1rem]">
               Call attention to issues in your locality and notify the
               appropriate authorities to get them resolved
             </h2>
             <SearchBox
-              selectPosition={selectPosition}
-              setSelectPosition={setSelectPosition}
+              selectPosition={selected}
+              setSelectPosition={setSelected}
             />
-            {/* <InputGroup size="xl" h="3rem" fontWeight={600}>
-              <Input
-                placeholder="Enter a location"
-                bg="bg-white"
-                color="#00BE7A"
-                border="2px"
-                borderRadius="4px"
-                px="1rem"
-              />
-            </InputGroup> */}
-            {/* <Input
-              name="location"
-              bg="bg-white"
-              color="#00BE7A"
-              border="2px"
-              borderRadius="4px"
-              height="2.8rem"
-              errors={errors}
-              placeholder="Enter a location"
-              variant="primary"
-            /> */}
-            <div className="flex   md:max-w-[24rem] justify-between ">
+            <div className="flex flex-col gap-4 w-auto align-middle md:flex-row  md:max-w-[full] justify-between">
               {" "}
-              <Button
-                variant="secondary"
+              <AppButton
+                variant="tertiary"
                 type="submit"
-                className=" rounded-[4px] flex items-center gap-2 justify-center hover:border-[#007A4E]"
+                onClick={gimmeUrLocation}
+                className=" rounded-[0.25rem] flex items-center gap-2 justify-center hover:border-[#007A4E]"
               >
-                <IoEyeSharp /> Use my Location
-              </Button>
+                <FaLocationArrow /> Use my Location
+              </AppButton>
               <div>
                 <ReportIssueButton />
               </div>
-              {/* <Button
-                variant="primary"
-                // type="submit"
-                className="rounded-[4px] px-0 mx-0 flex gap-2 items-center justify-center hover:bg-[#007A4E]"
-              >
-                <FaEdit /> Report Issue
-              </Button> */}
             </div>
           </div>
         </div>
@@ -86,17 +104,6 @@ const Home = () => {
         <h2 className="font-bold text-2xl mt-4 flex mx-12 ">
           How to report an Issue.
         </h2>
-        {/* <Flex
-          alignItems="center"
-          justifyItems="space-between"
-          justifyContent="center"
-          textColor="#A5A5A5"
-          fontSize={"1rem"}
-          gap="8rem"
-          mb="4rem"
-          w={{ base: "full", md: "90%" }}
-          flexWrap={{ base: "wrap", md: "nowrap" }}
-        > */}
 
         <div className="flex-col   flex md:flex-row md:space-x-10 gap-4 ">
           <div className="flex items-center gap-4 text-secondary font-semibold">
@@ -105,7 +112,7 @@ const Home = () => {
               <Divider orientation="vertical" />
             </Center>
             <div className="font-medium flex flex-col">
-              <p className="">Enter a Location</p>
+              <p className="">Click Report Issue</p>
             </div>
           </div>
           <div className="flex items-center gap-4 text-secondary font-semibold">
@@ -114,7 +121,7 @@ const Home = () => {
               <Divider orientation="vertical" />
             </Center>
             <div className="font-medium">
-              <p className="">Click Report Issue</p>
+              <p className="">Enter details of the issue</p>
             </div>
           </div>
           <div className="flex items-center gap-4 text-secondary font-semibold">
@@ -123,7 +130,7 @@ const Home = () => {
               <Divider orientation="vertical" />
             </Center>
             <div className="font-medium">
-              <p className="">Enter details of the issue</p>
+              <p className="">Add Images </p>
             </div>
           </div>
           <div className="flex items-center gap-4 text-secondary font-semibold">
@@ -136,126 +143,87 @@ const Home = () => {
             </div>
           </div>
         </div>
-
-        {/* </Flex> */}
       </section>
       <section className="bg-white items-center justify-center ">
         <div className="flex flex-col items-center p-8">
           <h2 className="font-bold text-2xl  ">Recent Reports</h2>
-          <div className="flex flex-col md:flex-row gap-4 py-4 px-2 md:px-8  max-w-[90rem]  w-auto items-center justify-center space-x-5">
-            <div className="flex flex-col gap-4 p-2 md:p-4">
-              {" "}
-              <img
-                className="w-[auto] h-[auto]"
-                src="/firebg.png"
-                alt="fire incidence"
-              />
-              <div>
-                <p className="text-xs text-tetiary">Nov 15, 2023</p>
-                <h2 className="md:text-2xl font-semibold text-primary">
-                  Raging Fire close to Oremeji Street
-                </h2>
-                <p className="text-xl flex flex-wrap md:w-[36rem] text-secondary">
-                  There’s been a fire that has been burning for 4 days, the fire
-                  started in Oremeji Forest and is fast approaching the
-                  residential area. We’d like the appropriate authorities to
-                  attend to this as soon as possible.
-                </p>
-              </div>
-            </div>
-            <div
-              onClick={() => {
-                window.location.href = "/report";
-              }}
-              className="flex flex-col  gap-4 cursor-pointer p-2 "
-            >
-              <div className="flex flex-col md:flex-row gap-4 items-start">
-                <img
-                  className="rounded-[4px] max-w-[14rem] w-auto h-auto max-h-[11rem]"
-                  src="/badroad.png"
-                  alt="bad road picture"
-                />
-                <div className="flex flex-col  gap-2 ">
-                  <p className="text-xs text-tetiary">Nov 15, 2023</p>
-                  <p className="text-sm md:text-xl flex text-primary font-bold ">
-                    Road in Abysmal Shape, Oremeji Street, Ojuolape LGA, Lagos
-                    State.
-                  </p>
+          {recentIssues ? (
+            <div className="flex flex-col min-w-[10rem] lg:flex-row gap-4 py-4 px-2 md:px-8  md:max-w-[90rem]  w-auto items-center justify-center space-x-5">
+              {lastissues && (
+                <div
+                  key={lastissues._id}
+                  onClick={() => {
+                    window.location.href = `/report/${lastissues._id}`;
+                  }}
+                  className="flex flex-col gap-4 p-2 md:p-4"
+                >
+                  {" "}
+                  <img
+                    className="w-[auto] h-[auto]"
+                    src={lastissues.imageUrl[0]}
+                    alt="fire incidence"
+                  />
+                  <div>
+                    <p className="text-xs text-tetiary">
+                      {lastissues.DateRegistered}
+                    </p>
+                    <h2 className="md:text-2xl font-semibold text-primary">
+                      {lastissues.Title}
+                    </h2>
+                    <p className="text-xl flex flex-wrap md:w-[36rem] text-secondary">
+                      {lastissues.IssuesDetails}
+                    </p>
+                  </div>
                 </div>
-              </div>
-              <div className="flex flex-col md:flex-row gap-4 items-start">
-                <img
-                  className="rounded-none max-w-[14rem] w-auto h-auto max-h-[11rem]"
-                  src="/flood.png"
-                  alt="Flood Picture"
-                />
-                <div className="flex flex-col gap-2">
-                  <p className="text-xs text-tetiary">Nov 15, 2023</p>
-                  <p className=" text-sm md:text-xl  flex  text-primary font-bold">
-                    Flood on Oremeji Street, Ojuolape LGA, Lagos State.
-                  </p>
-                </div>
-              </div>
+              )}
 
-              <div className="flex flex-col md:flex-row gap-4 items-start">
-                <img
-                  className="rounded-none max-w-[14rem] w-full h-auto max-h-[11rem]"
-                  src="/abandonbuilding.png"
-                  alt="Abandoned building picture"
-                />
-                <div className="flex flex-col gap-2">
-                  <p className="text-xs text-tetiary">Nov 15, 2023</p>
-                  <p className="text-sm md:text-xl flex text-primary font-bold">
-                    Abandoned building that Area Boys use to perform bad
-                    activities.
-                  </p>
-                </div>
+              <div className="flex flex-col  gap-4 cursor-pointer p-2 ">
+                {recentIssues.slice(1).map((newissue, index) => (
+                  <div
+                    key={index}
+                    onClick={() => {
+                      window.location.href = `/report/${newissue._id}`;
+                    }}
+                    className="flex flex-col gap-4 p-2 md:p-4"
+                  >
+                    {" "}
+                    <img
+                      className="w-[auto] h-[auto]"
+                      src={newissue.imageUrl[0]}
+                      alt="fire incidence"
+                    />
+                    <div>
+                      <p className="text-xs text-tetiary">
+                        {newissue.DateRegistered}
+                      </p>
+                      <h2 className="md:text-2xl font-semibold text-primary">
+                        {newissue.Title}
+                      </h2>
+                      <p className="text-xl flex flex-wrap md:w-[36rem] text-secondary">
+                        {newissue.IssuesDetails}
+                      </p>
+                    </div>
+                  </div>
+                ))}
               </div>
             </div>
-            {/* <div className="flex flex-col gap-4 bg-white p-4 ">
-              <div className="flex flex-col gap-4 items-start">
-                <img
-                  className="rounded-[4px]  w-[auto] h-[auto] "
-                  src="/badroad.png"
-                  alt="bad road picture"
-                />
-                <div className="flex flex-col">
-                  <p className="text-xs text-tetiary">Nov 15, 2023</p>
-                  <p className=" flex flex-wrap  text-primary font-bold">
-                    Road in Abysmal Shape, Oremeji Street, Ojuolape LGA, Lagos
-                    State.
-                  </p>
-                </div>
-              </div>
-              <div className="flex flex-col gap-4 items-start">
-                <img
-                  className="rounded-none  w-auto h-auto"
-                  src="/flood.png"
-                  alt="Flood Picture"
-                />
-                <div className="flex flex-col ">
-                  <p className="text-xs text-tetiary">Nov 15, 2023</p>
-                  <p className=" flex flex-wrap text-primary font-bold">
-                    Flood on Oremeji Street, Ojuolape LGA, Lagos State.
-                  </p>
-                </div>
-              </div>
-              <div className="flex flex-col gap-4 items-start">
-                <img
-                  className="rounded-none w-auto h-auto "
-                  src="/abandonbuilding.png"
-                  alt="Abandoned building picture"
-                />
-                <div className="flex flex-col">
-                  <p className="text-xs text-tetiary">Nov 15, 2023</p>
-                  <p className=" flex flex-wrap   text-primary font-bold">
-                    Abandoned building that Area Boys use to perform bad
-                    activities.
-                  </p>
-                </div>
-              </div>
-            </div> */}
-          </div>
+          ) : recentIssuesRes ? (
+            <div
+              className="text-center alert alert-success"
+              id="message"
+              role="alert"
+              style={{ color: "red", fontSize: "20px", marginTop: "50px" }}
+            >
+              {recentIssuesRes}
+            </div>
+          ) : (
+            <p
+              className="text-secondary text-sm md:text-base font-normal "
+              style={{ color: "red", fontSize: "20px", marginTop: "50px" }}
+            >
+              Could not fetch any recent issues, please try again later
+            </p>
+          )}
         </div>
       </section>
       <Footer />

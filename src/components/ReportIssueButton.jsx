@@ -12,7 +12,7 @@ const ReportIssueButton = () => {
     <>
       <button
         onClick={() => setShowModal(true)}
-        className=" flex w-[10rem] cursor-pointer text-white ml-4 bg-tetiary hover:bg-[#007A4E] items-center rounded-[4px] h-[2.7rem] justify-center"
+        className=" w-[100%] cursor-pointer flex text-white  bg-tetiary hover:bg-[#007A4E] items-center rounded-[0.25rem] h-[2.7rem] md:w-[10rem] justify-center "
         variant="primary"
       >
         Report an Issue

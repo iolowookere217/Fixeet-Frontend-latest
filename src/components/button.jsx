@@ -1,30 +1,65 @@
-/* eslint-disable react/prop-types */
+import { Button } from "@chakra-ui/react";
+import customTheme from "@/utils/theme";
+import { Link } from "react-router-dom";
 
-import "../styles/button.css";
-
-const Button = ({ children, variant, borderVariant, className, style }) => {
-  let buttonClass = "btn"; // Default class
-
-  if (variant === "primary") {
-    buttonClass += " btn-primary";
-  } else if (variant === "secondary") {
-    buttonClass += " btn-secondary ";
-  } else if (variant === "primary1") {
-    buttonClass += " btn-primary1 ";
-  } else if (variant === "primary2") {
-    buttonClass += " btn-primary2 ";
-  }
-  if (borderVariant === "noRadius") {
-    buttonClass += " btn-radius ";
-  }
-  if (className) {
-    buttonClass += ` ${className}`;
-  }
+const AppButton = ({
+  children,
+  type,
+  variant = "primary",
+  width = "full",
+  height = "2.7rem",
+  bRadius = "0.25rem",
+  loading,
+  style,
+  disabled,
+  to,
+  ...props
+}) => {
+  const { colors } = customTheme;
   return (
-    <button className={buttonClass} style={style}>
+    <Button
+      as={to ? Link : undefined}
+      to={to}
+      type={type}
+      variant={variant}
+      width={width}
+      height={height}
+      borderRadius={bRadius}
+      isLoading={loading}
+      isDisabled={disabled}
+      fontWeight="normal"
+      style={style}
+      fontSize="1rem"
+      bg={
+        variant === "primary"
+          ? colors.brand.main
+          : variant === "secondary"
+            ? colors.brand.secondary
+            : variant === "tertiary"
+              ? colors.brand.tertiary
+              : variant === "dark"
+                ? colors.bg.green
+                : "transparent"
+      }
+      color={
+        variant === "primary"
+          ? "white"
+          : variant === "secondary"
+            ? "white"
+            : variant === "tertiary"
+              ? colors.typography.white
+              : variant === "dark"
+                ? "white"
+                : colors.typography.dark
+      }
+      _hover={{
+        opacity: 0.8,
+      }}
+      {...props}
+    >
       {children}
-    </button>
+    </Button>
   );
 };
 
-export default Button;
+export default AppButton;

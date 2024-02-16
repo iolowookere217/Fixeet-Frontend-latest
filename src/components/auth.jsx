@@ -1,31 +1,31 @@
 import React, { useState } from "react";
-import SignIn from "./SignIn";
-import SignUp from "./SignUp";
+import Login from "./Login";
+import Register from "./Register";
 
 const auth = ({ onClose }) => {
-  const [showSignIn, setShowSignIn] = useState(true);
+  const [showLogin, setShowLogin] = useState(true);
 
-  const switchToSignIn = () => {
-    setShowSignIn(true);
+  const switchToLogin = () => {
+    setShowLogin(true);
   };
 
-  const switchToSignUp = () => {
-    setShowSignIn(false);
+  const switchToRegister = () => {
+    setShowLogin(false);
   };
 
   return (
     <div>
-      {showSignIn ? (
-        <SignIn
+      {showLogin ? (
+        <Login
           visible={true}
           onClose={onClose}
-          switchToSignUp={switchToSignUp}
+          switchToRegister={switchToRegister}
         />
       ) : (
-        <SignUp
+        <Register
           visible={true}
           onClose={onClose}
-          switchToSignIn={switchToSignIn}
+          switchToLogin={switchToLogin}
         />
       )}
     </div>

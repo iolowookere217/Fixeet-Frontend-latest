@@ -1,114 +1,74 @@
-import {
-  FormControl,
-  FormHelperText,
-  FormLabel,
-  Input,
-} from "@chakra-ui/react";
+import { useState, memo } from "react";
+import { AiOutlineEye, AiOutlineEyeInvisible } from "react-icons/ai";
 
-const AppInput = ({
-  label,
-  name,
-  placeholder,
-  type,
-  register,
-  errors,
-  disabled,
-  width = "100%",
-  autoComplete,
-  variant = "primary",
-  ...props
-}) => {
-  return (
-    <FormControl className="flex flex-col mb-4" maxHeight="5rem">
-      {label && (
-        <FormLabel
-          htmlFor={name}
-          color="typography.text-primary"
-          fontSize=".875rem"
-          fontWeight={600}
-        >
-          {label}
-        </FormLabel>
-      )}
-      <Input
-        type={type}
-        id={name}
-        placeholder={placeholder}
-        autoComplete={autoComplete}
-        isDisabled={disabled}
-        width={width}
-        height={
-          variant === "primary"
-            ? "2.5rem"
-            : variant === "secondary"
-              ? "2rem"
-              : "2rem"
-        }
-        bg={
-          variant === "primary"
-            ? "#F4F4F4"
-            : variant === "secondary"
-              ? "white"
-              : variant === "tertiary"
-                ? "transparent"
-                : "white"
-        }
-        color={
-          variant === "primary"
-            ? "typography.text-primary"
-            : variant === "secondary"
-              ? "typography.dark"
-              : variant === "tertiary"
-                ? "white"
-                : "typography.dark"
-        }
-        borderRadius={
-          variant === "primary"
-            ? ".3rem"
-            : variant === "secondary"
-              ? ".3rem"
-              : variant === "tertiary"
-                ? "0"
-                : ".3rem"
-        }
-        fontSize="1rem"
-        outline="none"
-        autoSave="true"
-        autoCorrect="on"
-        spellCheck="true"
-        isInvalid={errors?.[name]?.message ? true : false}
-        errorBorderColor="red.300"
-        border={
-          variant === "primary"
-            ? "1px solid #A5A5A5"
-            : variant === "secondary"
-              ? "1px solid #D4D4D4"
-              : variant === "tertiary"
-                ? "none"
-                : "1px solid #D4D4D4"
-        }
-        borderBottom={variant === "tertiary" && "1px solid #D4D4D4"}
-        _placeholder={{
-          color:
-            variant === "tertiary"
-              ? "rgba(255, 255, 255, 0.66)"
-              : "bg.dark-ash",
-          fontSize: ".9rem",
-          verticalAlign: "middle",
-          fontWeight: "600",
-        }}
-        {...register(name, {
-          required: true,
-        })}
-        {...props}
-      />
-      {errors?.[name] && (
-        <FormHelperText role="alert" color={"red"} fontSize=".8rem">
-          {errors[name]?.message}
-        </FormHelperText>
-      )}
-    </FormControl>
-  );
-};
+const Input = memo(
+  ({
+    name,
+    placeholder,
+    type,
+    autoComplete,
+    disabled,
+    style,
+    label,
+    value,
+    ...props
+  }) => {
+    const [inputType, setInputType] = useState(type);
 
-export default AppInput;
+    const toggleInputType = () => {
+      setInputType("text");
+      setTimeout(() => {
+        setInputType("password");
+      }, 1000);
+    };
+
+    return (
+      <div className="mb-2 flex flex-col gap-2">
+        {label && (
+          <label htmlFor={name} className="text-primary font-semibold">
+            {label}
+          </label>
+        )}
+        <div className="relative w-full">
+          <input
+            type={inputType}
+            id={name}
+            // aria-invalid={errors[name] ? "true" : "false"}
+            autoSave="true"
+            autoCorrect="on"
+            autoComplete={autoComplete}
+            placeholder={placeholder}
+            disabled={disabled}
+            className={`w-full p-2 text-primary rounded-[0.25rem]  border border-[#a8a7a7] placeholder:text-text1 placeholder:text-xs lg:placeholder:text-base ${
+              disabled === true ? "cursor-not-allowed" : "cursor-text"
+            }`}
+            value={value}
+            style={style}
+            {...props}
+          />
+          {type === "password" && (
+            <span
+              className="absolute right-2 top-1/2 transform -translate-y-1/2 cursor-pointer"
+              onClick={toggleInputType}
+            >
+              {inputType === "password" ? (
+                <AiOutlineEyeInvisible className="text-2xl text-slate-500" />
+              ) : (
+                <AiOutlineEye className="text-2xl text-slate-500" />
+              )}
+            </span>
+          )}
+        </div>
+        {/* {errors[name] && (
+          <span role="alert" className="text-xs text-[#FF0000] capitalize">
+            {errors[name].message}
+          </span>
+        )} */}
+      </div>
+    );
+  }
+);
+
+Input.displayName = "Input";
+
+export default Input;

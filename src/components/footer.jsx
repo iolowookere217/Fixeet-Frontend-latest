@@ -1,7 +1,7 @@
 import React from "react";
 import { Link } from "react-router-dom";
 import Logo from "/logo.png";
-import Button from "./button";
+import AppButton from "./button";
 import { Divider } from "@chakra-ui/react";
 
 const Footer = () => {
@@ -19,72 +19,37 @@ const Footer = () => {
         </div>
         <div className="flex items-center justify-center">
           <div className="flex justify-around flex-wrap items-center gap-4 p-4">
-            <Link className="" to="#">
+            {/* <Link className="" to="#">
               Contact Us
-            </Link>
-            <Link to="/reports">Your Reports</Link>
-            <Link to="/all-reports">All Reports</Link>
-            <Link to="/home">Local Alerts</Link>
+            </Link> */}
+            {/* <Link to="/reports">Your Reports</Link> */}
+            
+            <Link to="/home">Home</Link>
             <Link to="/about">About Us</Link>
+            <Link to="/all-reports">All Reports</Link>
           </div>
         </div>
         <div className="flex flex-col items-center bg-white p-8 gap-4 w-[auto] rounded-[4px]">
           <p className=" text-secondary">
             You can help keep this site running by donating to the cause.
           </p>
-          <Button variant="primary" type="submit">
+          <AppButton variant="primary" type="submit">
             Donate Now
-          </Button>
+          </AppButton>
         </div>
       </div>
 
       <div className=" items-center text-center w-full text-[#FAFAFAAF]">
-        <p>Isaac Olowookere & Stanley Paul</p>
-        <Divider />
-        <p>
+        
+        <p style={{ marginBottom: "30px" }}>
           &copy; Copyright Fixeet {new Date().getUTCFullYear()}. All right
           reserved
         </p>
+        <Divider/>
+        <p>Credits: Isaac Olowookere & <a href="https://linkedin.com/in/stanleychiemelapaul" target="_blank" rel="noopener noreferrer">Stanley Paul</a> </p>
+        
       </div>
     </section>
-    // <footer className="bg-primary p-4 ">
-    //   <div className="flex flex-col gap-8">
-    //     <div className="flex justify-center gap-[10rem] p-4  items-center space-x-10">
-    //       <div className="gap-4 flex flex-col">
-    //         <img
-    //           src={Logo}
-    //           alt="Fixeetlogo"
-    //           className="max-w-[11rem]  h-[3rem] "
-    //         />
-    //         <p className=" flex-wrap w-[16rem]">
-    //           Mapping and reporting local issues to the authorities responsible
-    //           for fixing them.
-    //         </p>
-    //       </div>
-    //       <div className="flex flex-col items-center justify-center flex-wrap gap-x-8 gap-y-4 font-semibold text-lg text-white">
-    //         <Link className="text-secondary" to="#">
-    //           Reporting
-    //         </Link>
-    //         <Link to="#">Your Reports</Link>
-    //         <Link to="#">All Reports</Link>
-    //         <Link to="#">Local Alerts</Link>
-    //       </div>
-    //       <div className="flex flex-col bg-white items-center  p-8 gap-4 w-[23rem] rounded-[4px]">
-    //         <p className="text-secondary">
-    //           You can help keep this site running by donating to the cause.
-    //         </p>
-    //         <Button variant="primary" type="submit">
-    //           Donate Now
-    //         </Button>
-    //       </div>
-    //     </div>
-    //     <Divider />
-    //     <p className="mx-auto text-center w-full text-[#FAFAFAAF]">
-    //       &copy; Copyright Fixeet {new Date().getUTCFullYear()}. All right
-    //       reserved
-    //     </p>
-    //   </div>
-    // </footer>
   );
 };
 

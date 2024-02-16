@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useContext } from "react";
 import {
   MapContainer,
   TileLayer,
@@ -15,6 +15,7 @@ import "@/styles/map.css";
 import logo from "/location.png";
 import L from "leaflet";
 import { json } from "react-router-dom";
+import { SelectContext } from "../context/SelectContext";
 
 // create custom icon
 const customIcon = new Icon({
@@ -34,35 +35,33 @@ const createClusterCustomIcon = function (cluster) {
 const position = [6.5227, 3.6218];
 
 function ResetCenterView(props) {
-  const { selectPosition } = props;
+  const { selected } = props;
   const map = useMap();
 
   useEffect(() => {
-    if (selectPosition) {
-      map.flyTo(
-        L.latLng(selectPosition?.lat, selectPosition?.lon),
-        map.getZoom(15),
-        {
-          animate: true,
-        }
-      );
+    if (selected) {
+      map.flyTo(L.latLng(selected?.lat, selected?.lon), map.getZoom(13), {
+        animate: true,
+      });
       // map.setView(
-      //   L.latLng(selectPosition?.lat, selectPosition?.lon),
+      //   L.latLng(selected?.lat, selected?.lon),
       //   map.getZoom(10),
       //   {
       //     animate: true,
       //   }
       // );
     }
-  }, [selectPosition]);
+  }, [selected]);
 
   return null;
 }
 // const API_BASE_URL = "https://llll.onrender.com";
 
 const MapView = (props) => {
-  const { selectPosition } = props;
-  const locationSelection = [selectPosition?.lat, selectPosition?.lon];
+  // const { selected } = props;
+  const { selected } = useContext(SelectContext);
+  // const
+  const locationSelection = [selected?.lat, selected?.lon];
   // const [marker, setMarker] = useState([]);
 
   // const getMarkers = async () => {
@@ -75,9 +74,6 @@ const MapView = (props) => {
   //     console.log(error);
   //   }
   // };
-
-  // const [color, setColor] = useState("#ffff00");
-  // const colors = ["green", "blue", "yellow", "orange", "grey"];
 
   useEffect(() => {
     console.log(mapData);
@@ -113,8 +109,8 @@ const MapView = (props) => {
 
   return (
     <MapContainer
-      style={{ height: "100vh", width: "45rem" }}
-      zoom={11}
+      style={{ height: "100vh", width: "40rem" }}
+      zoom={13}
       center={position}
       className="flex z-10"
     >
@@ -127,15 +123,19 @@ const MapView = (props) => {
         data={mapData.features}
         onEachFeature={onEachCountry}
       />
-      {selectPosition && (
+      {selected && (
         <MarkerClusterGroup
           chunkedLoading
           iconCreateFunction={createClusterCustomIcon}
         >
           {!marker?.length <= 0 ? (
-            marker.map((marker) => (
-              <Marker position={locationSelection} icon={customIcon}>
-                <Popup>{marker.popUp}</Popup>
+            marker.map((marker, index) => (
+              <Marker
+                key={index}
+                position={locationSelection}
+                icon={customIcon}
+              >
+                <Popup title="marker">{marker.popUp}</Popup>
               </Marker>
             ))
           ) : (
@@ -148,7 +148,7 @@ const MapView = (props) => {
           ))} */}
         </MarkerClusterGroup>
       )}
-      <ResetCenterView selectPosition={selectPosition} />
+      <ResetCenterView selected={selected} />
     </MapContainer>
   );
 };

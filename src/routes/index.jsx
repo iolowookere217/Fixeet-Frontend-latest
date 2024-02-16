@@ -36,7 +36,7 @@ const router = createBrowserRouter([
     errorElement: <Error />,
   },
   {
-    path: "/report",
+    path: "/report/:id",
     element: (
       <Suspense fallback={<LoadingSpinner />}>
         <Report />
