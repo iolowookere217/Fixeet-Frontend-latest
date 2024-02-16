@@ -23,7 +23,7 @@ const Footer = () => {
               Contact Us
             </Link> */}
             {/* <Link to="/reports">Your Reports</Link> */}
-            
+
             <Link to="/home">Home</Link>
             <Link to="/about">About Us</Link>
             <Link to="/all-reports">All Reports</Link>
@@ -39,15 +39,15 @@ const Footer = () => {
         </div>
       </div>
 
-      <div className=" items-center text-center w-full text-[#FAFAFAAF]">
-        
-        <p style={{ marginBottom: "30px" }}>
-          &copy; Copyright Fixeet {new Date().getUTCFullYear()}. All right
-          reserved
+      <div className=" items-center text-center w-full text-[#FAFAFAAF] mt-4">
+        <Divider />
+        <p style={{ marginBottom: "3px" }}>
+          <a href="https://www.linkedin.com/in/isaac-olowookere/">
+            {" "}
+            &copy; Copyright Fixeet {new Date().getUTCFullYear()}. All right
+            reserved
+          </a>
         </p>
-        <Divider/>
-        <p>Credits: Isaac Olowookere & <a href="https://linkedin.com/in/stanleychiemelapaul" target="_blank" rel="noopener noreferrer">Stanley Paul</a> </p>
-        
       </div>
     </section>
   );
